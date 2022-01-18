@@ -1,45 +1,45 @@
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { deleteOrder, listOrders } from '../actions/orderActions';
-import LoadingBox from '../components/LoadingBox';
-import MessageBox from '../components/MessageBox';
-import { ORDER_DELETE_RESET } from '../constants/orderConstants';
+import { useDispatch, useSelector } from 'react-redux'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { deleteOrder, listOrders } from '../actions/orderActions'
+import LoadingBox from '../components/LoadingBox'
+import MessageBox from '../components/MessageBox'
+import { ORDER_DELETE_RESET } from '../constants/orderConstants'
 
-export default function OrderListScreen() {
-    const navigate = useNavigate();
- // const { pathname } = useLocation();
-    const orderList = useSelector((state) => state.orderList);
-  const { loading, error, orders } = orderList;
+export default function OrderListScreen(props) {
+  const navigate = useNavigate()
+  // const { pathname } = useLocation();
+  const orderList = useSelector((state) => state.orderList)
+  const { loading, error, orders } = orderList
 
-  const orderDelete = useSelector((state) => state.orderDelete);
+  const orderDelete = useSelector((state) => state.orderDelete)
   const {
     loading: loadingDelete,
     error: errorDelete,
     success: successDelete,
-  } = orderDelete;
-    const dispatch = useDispatch();
-    useEffect(() => {
-       dispatch({ type: ORDER_DELETE_RESET });
-        dispatch(listOrders());
-      }, [dispatch, successDelete]);
-      const deleteHandler = (order) => {
-         if (window.confirm('Are you sure to delete?')) {
-           dispatch(deleteOrder(order._id));
-         }
-      };
+  } = orderDelete
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch({ type: ORDER_DELETE_RESET })
+    dispatch(listOrders())
+  }, [dispatch, successDelete])
+  const deleteHandler = (order) => {
+    if (window.confirm('Are you sure to delete?')) {
+      dispatch(deleteOrder(order._id))
+    }
+  }
 
-    return (
-        <div>
-             <h1>Orders</h1>
-             {loadingDelete && <LoadingBox></LoadingBox>}
-      {errorDelete && <MessageBox variant="danger">{errorDelete}</MessageBox>}
-               {loading ? (
+  return (
+    <div>
+      <h1>Orders</h1>
+      {loadingDelete && <LoadingBox></LoadingBox>}
+      {errorDelete && <MessageBox variant='danger'>{errorDelete}</MessageBox>}
+      {loading ? (
         <LoadingBox></LoadingBox>
       ) : error ? (
-        <MessageBox variant="danger">{error}</MessageBox>
+        <MessageBox variant='danger'>{error}</MessageBox>
       ) : (
-        <table className="table">
+        <table className='table'>
           <thead>
             <tr>
               <th>ID</th>
@@ -66,17 +66,17 @@ export default function OrderListScreen() {
                 </td>
                 <td>
                   <button
-                    type="button"
-                    className="small"
+                    type='button'
+                    className='small'
                     onClick={() => {
-                      navigate(`/order/${order._id}`);
+                      navigate(`/order/${order._id}`)
                     }}
                   >
                     Details
                   </button>
                   <button
-                    type="button"
-                    className="small"
+                    type='button'
+                    className='small'
                     onClick={() => deleteHandler(order)}
                   >
                     Delete
@@ -87,6 +87,6 @@ export default function OrderListScreen() {
           </tbody>
         </table>
       )}
-        </div>
-    )
+    </div>
+  )
 }
