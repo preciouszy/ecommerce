@@ -1,5 +1,5 @@
 import React from 'react'
-import {  useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import { signout } from './actions/userActions'
 import AdminRoute from './components/AdminRoute'
@@ -18,16 +18,17 @@ import ProfileScreen from './screen/ProfileScreen'
 import RegisterScreen from './screen/RegisterScreen'
 import ShippingAdressScreen from './screen/ShippingAdressScreen'
 import SigninScreen from './screen/SigninScreen'
+import UserListScreen from './screen/UserListScreen'
 
 function App() {
   const cart = useSelector((state) => state.cart)
   const { cartItems } = cart
-   const userSignin = useSelector((state) => state.userSignin)
-   const { userInfo } = userSignin
-   const dispatch = useDispatch()
-   const signoutHandler = () => {
-    dispatch(signout());
-  };
+  const userSignin = useSelector((state) => state.userSignin)
+  const { userInfo } = userSignin
+  const dispatch = useDispatch()
+  const signoutHandler = () => {
+    dispatch(signout())
+  }
   return (
     <BrowserRouter>
       <div className='grid-container'>
@@ -44,48 +45,46 @@ function App() {
                 <span className='badge'>{cartItems.length}</span>
               )}
             </Link>
-            {
-             userInfo ? (
-               <div className='dropdown'>
-               <Link to = "#">{userInfo.name} <i className="fa fa-caret-down"></i></Link>
-               <ul className='dropdown-content'>
-               <li>
-                    <Link to="/profile">User Profile</Link>
-                  </li>
-               <li>
-                    <Link to="/orderhistory">Order History</Link>
-                  </li>
-               <Link to="#signout" onClick={signoutHandler}>
-                      Sign Out
-                    </Link>
-               </ul>
-               </div>
-             ) :
-             (
-               <Link to='/signin'>Sign In</Link>
-               )
-               
-              } 
-            {userInfo && userInfo.isAdmin && (
-              <div className="dropdown">
-                <Link to="#admin">
-                  Admin <i className="fa fa-caret-down"></i>
+            {userInfo ? (
+              <div className='dropdown'>
+                <Link to='#'>
+                  {userInfo.name} <i className='fa fa-caret-down'></i>
                 </Link>
-                <ul className="dropdown-content">
+                <ul className='dropdown-content'>
                   <li>
-                    <Link to="/dashboard">Dashboard</Link>
+                    <Link to='/profile'>User Profile</Link>
                   </li>
                   <li>
-                    <Link to="/productlist">Products</Link>
+                    <Link to='/orderhistory'>Order History</Link>
+                  </li>
+                  <Link to='#signout' onClick={signoutHandler}>
+                    Sign Out
+                  </Link>
+                </ul>
+              </div>
+            ) : (
+              <Link to='/signin'>Sign In</Link>
+            )}
+            {userInfo && userInfo.isAdmin && (
+              <div className='dropdown'>
+                <Link to='#admin'>
+                  Admin <i className='fa fa-caret-down'></i>
+                </Link>
+                <ul className='dropdown-content'>
+                  <li>
+                    <Link to='/dashboard'>Dashboard</Link>
                   </li>
                   <li>
-                    <Link to="/orderlist">Orders</Link>
+                    <Link to='/productlist'>Products</Link>
                   </li>
                   <li>
-                    <Link to="/userlist">Users</Link>
+                    <Link to='/orderlist'>Orders</Link>
                   </li>
                   <li>
-                    <Link to="/support">Support</Link>
+                    <Link to='/userlist'>Users</Link>
+                  </li>
+                  <li>
+                    <Link to='/support'>Support</Link>
                   </li>
                 </ul>
               </div>
@@ -93,9 +92,6 @@ function App() {
           </div>
         </header>
         <main>
-
-
-
           <Routes>
             <Route
               path='/product/:id'
@@ -103,26 +99,27 @@ function App() {
               exact
             ></Route>
             <Route
-              path="/product/:id/edit"
-              element={<ProductEditScreen/>}
+              path='/product/:id/edit'
+              element={<ProductEditScreen />}
               exact
             ></Route>
 
             <Route path='/cart' element={<CartScreen />}></Route>
             <Route path='/cart/:id' element={<CartScreen />}></Route>
 
-
-            
-            <Route path="/signin" element={<SigninScreen />}></Route>
-            <Route path="/register" element={<RegisterScreen />}></Route>
+            <Route path='/signin' element={<SigninScreen />}></Route>
+            <Route path='/register' element={<RegisterScreen />}></Route>
             <Route path='/shipping' element={<ShippingAdressScreen />}></Route>
             <Route path='/payment' element={<PaymentMethodScreen />}></Route>
-            <Route path="/placeorder" element={<PlaceOrderScreen />}></Route>
-             <Route path="/order/:id" element={<OrderScreen />}></Route> 
-             <Route path="/orderhistory" element={<OrderHistoryScreen/>}></Route> 
-            
-             <Route
-              path="/productlist"
+            <Route path='/placeorder' element={<PlaceOrderScreen />}></Route>
+            <Route path='/order/:id' element={<OrderScreen />}></Route>
+            <Route
+              path='/orderhistory'
+              element={<OrderHistoryScreen />}
+            ></Route>
+
+            <Route
+              path='/productlist'
               element={
                 <AdminRoute>
                   <ProductListScreen />
@@ -130,8 +127,8 @@ function App() {
               }
             />
 
-           <Route
-              path="/orderlist"
+            <Route
+              path='/orderlist'
               element={
                 <AdminRoute>
                   <OrderListScreen />
@@ -139,18 +136,23 @@ function App() {
               }
             />
 
-             <Route
-              path="/profile"
+            <Route
+              path='/profile'
               element={
-                
                 <PrivateRoute>
-                <ProfileScreen />
-              </PrivateRoute>
-                
+                  <ProfileScreen />
+                </PrivateRoute>
               }
             />
-                
-            
+
+            <Route
+              path='/userlist'
+              element={
+                <AdminRoute>
+                  <UserListScreen />
+                </AdminRoute>
+              }
+            />
             <Route path='/' element={<HomeScreen />} exact></Route>
           </Routes>
         </main>
