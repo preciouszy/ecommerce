@@ -18,6 +18,7 @@ import ProfileScreen from './screen/ProfileScreen'
 import RegisterScreen from './screen/RegisterScreen'
 import ShippingAdressScreen from './screen/ShippingAdressScreen'
 import SigninScreen from './screen/SigninScreen'
+import UserEditScreen from './screen/UserEditScreen'
 import UserListScreen from './screen/UserListScreen'
 
 function App() {
@@ -150,6 +151,15 @@ function App() {
               element={
                 <AdminRoute>
                   <UserListScreen />
+                </AdminRoute>
+              }
+            />
+
+            <Route
+              path='/user/:id/edit'
+              element={
+                <AdminRoute>
+                  <UserEditScreen />
                 </AdminRoute>
               }
             />
