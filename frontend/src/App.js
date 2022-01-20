@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import { signout } from './actions/userActions'
 import AdminRoute from './components/AdminRoute'
 import PrivateRoute from './components/PrivateRoute'
+import SellerRoute from './components/SellerRoute'
 import CartScreen from './screen/CartScreen'
 import HomeScreen from './screen/HomeScreen'
 import OrderHistoryScreen from './screen/OrderHistoryScreen'
@@ -66,6 +67,23 @@ function App() {
             ) : (
               <Link to='/signin'>Sign In</Link>
             )}
+
+            {userInfo && userInfo.isSeller && (
+              <div className='dropdown'>
+                <Link to='#admin'>
+                  Seller <i className='fa fa-caret-down'></i>
+                </Link>
+                <ul className='dropdown-content'>
+                  <li>
+                    <Link to='/productlist/seller'>Products</Link>
+                  </li>
+                  <li>
+                    <Link to='/orderlist/seller'>Orders</Link>
+                  </li>
+                </ul>
+              </div>
+            )}
+
             {userInfo && userInfo.isAdmin && (
               <div className='dropdown'>
                 <Link to='#admin'>
@@ -163,6 +181,24 @@ function App() {
                 </AdminRoute>
               }
             />
+            <Route
+              path='/productlist/seller'
+              element={
+                <SellerRoute>
+                  <ProductListScreen />
+                </SellerRoute>
+              }
+            />
+
+            <Route
+              path='/orderlist/seller'
+              element={
+                <SellerRoute>
+                  <OrderListScreen />
+                </SellerRoute>
+              }
+            />
+
             <Route path='/' element={<HomeScreen />} exact></Route>
           </Routes>
         </main>

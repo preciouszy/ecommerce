@@ -1,75 +1,89 @@
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { createProduct, deleteProduct, listProducts } from '../actions/productActions';
-import LoadingBox from '../components/LoadingBox';
-import MessageBox from '../components/MessageBox';
-import { PRODUCT_CREATE_RESET, PRODUCT_DELETE_RESET } from '../constants/productConstants';
+import { useDispatch, useSelector } from 'react-redux'
+import { useLocation, useNavigate } from 'react-router-dom'
+import {
+  createProduct,
+  deleteProduct,
+  listProducts,
+} from '../actions/productActions'
+import LoadingBox from '../components/LoadingBox'
+import MessageBox from '../components/MessageBox'
+import {
+  PRODUCT_CREATE_RESET,
+  PRODUCT_DELETE_RESET,
+} from '../constants/productConstants'
 
 export default function ProductListScreen() {
-  const navigate = useNavigate();
-    const productList = useSelector((state) => state.productList);
-  const { loading, error, products } = productList;
+  const { pathname } = useLocation()
+  const sellerMode = pathname.indexOf('/seller') >= 0
+  const navigate = useNavigate()
+  const productList = useSelector((state) => state.productList)
+  const { loading, error, products } = productList
 
-  const productCreate = useSelector((state) => state.productCreate);
+  const productCreate = useSelector((state) => state.productCreate)
   const {
     loading: loadingCreate,
     error: errorCreate,
     success: successCreate,
     product: createdProduct,
-  } = productCreate;
+  } = productCreate
 
-  const productDelete = useSelector((state) => state.productDelete);
+  const productDelete = useSelector((state) => state.productDelete)
   const {
     loading: loadingDelete,
     error: errorDelete,
     success: successDelete,
-  } = productDelete;
-
-  const dispatch = useDispatch();
-  useEffect(()=>{
+  } = productDelete
+  const userSignin = useSelector((state) => state.userSignin)
+  const { userInfo } = userSignin
+  const dispatch = useDispatch()
+  useEffect(() => {
     if (successCreate) {
-      dispatch({ type: PRODUCT_CREATE_RESET });
-      navigate(`/product/${createdProduct._id}/edit`);
+      dispatch({ type: PRODUCT_CREATE_RESET })
+      navigate(`/product/${createdProduct._id}/edit`)
     }
     if (successDelete) {
-      dispatch({ type: PRODUCT_DELETE_RESET });
+      dispatch({ type: PRODUCT_DELETE_RESET })
     }
-    dispatch(
-        listProducts()
-      );
-  }, [dispatch,createdProduct,
-    navigate,successCreate,successDelete,])
+    dispatch(listProducts({ seller: sellerMode ? userInfo._id : '' }))
+  }, [
+    dispatch,
+    createdProduct,
+    navigate,
+    successCreate,
+    successDelete,
+    sellerMode,
+    userInfo._id,
+  ])
   const deleteHandler = (product) => {
     if (window.confirm('Are you sure to delete?')) {
-      dispatch(deleteProduct(product._id));
+      dispatch(deleteProduct(product._id))
     }
-  };
+  }
   const createHandler = () => {
-    dispatch(createProduct());
-  };
-    return (
-        <div>
-          <div className='row'>
-          
-          <h1>Products</h1>
-          <button type="button" className="primary" onClick={createHandler}>
+    dispatch(createProduct())
+  }
+  return (
+    <div>
+      <div className='row'>
+        <h1>Products</h1>
+        <button type='button' className='primary' onClick={createHandler}>
           Create Product
         </button>
-        </div>
-        {loadingDelete && <LoadingBox></LoadingBox>}
-         {errorDelete && <MessageBox variant="danger">{errorDelete}</MessageBox>}
+      </div>
+      {loadingDelete && <LoadingBox></LoadingBox>}
+      {errorDelete && <MessageBox variant='danger'>{errorDelete}</MessageBox>}
 
-        {loadingCreate && <LoadingBox></LoadingBox>}
-      {errorCreate && <MessageBox variant="danger">{errorCreate}</MessageBox>}
+      {loadingCreate && <LoadingBox></LoadingBox>}
+      {errorCreate && <MessageBox variant='danger'>{errorCreate}</MessageBox>}
 
-              {loading ? (
+      {loading ? (
         <LoadingBox></LoadingBox>
       ) : error ? (
-        <MessageBox variant="danger">{error}</MessageBox>
+        <MessageBox variant='danger'>{error}</MessageBox>
       ) : (
         <>
-          <table className="table">
+          <table className='table'>
             <thead>
               <tr>
                 <th>ID</th>
@@ -90,15 +104,15 @@ export default function ProductListScreen() {
                   <td>{product.brand}</td>
                   <td>
                     <button
-                      type="button"
-                      className="small"
+                      type='button'
+                      className='small'
                       onClick={() => navigate(`/product/${product._id}/edit`)}
                     >
                       Edit
                     </button>
                     <button
-                      type="button"
-                      className="small"
+                      type='button'
+                      className='small'
                       onClick={() => deleteHandler(product)}
                     >
                       Delete
@@ -121,7 +135,6 @@ export default function ProductListScreen() {
           </div> */}
         </>
       )}
-      </div>
-        
-    )
+    </div>
+  )
 }
